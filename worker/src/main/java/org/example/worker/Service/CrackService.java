@@ -43,6 +43,7 @@ public class CrackService {
             log.info("Получена задача: from={} to={}", task.getFrom(), task.getTo());
 
             crackTask(task);
+            log.info("задачку сделал");
         }
     }
 
@@ -106,7 +107,7 @@ public class CrackService {
     }
 
     private void sendResultToManager(String requestId, String foundWord) {
-        String url = managerApiUrl + "/api/hash/internal/task";
+        String url = managerApiUrl + "/api/hash/crack/complete";
         log.info("Sending result to manager: url={}, requestId={}, word={}", url, requestId, foundWord);
         CompleteCrackRequest body = new CompleteCrackRequest();
         body.setRequestId(requestId);
