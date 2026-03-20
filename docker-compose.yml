@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+
+  manager:
+    build: ./manager
+    ports:
+      - "8080:8080"
+    networks:
+      - crackhash
+
+  worker1:
+    build: ./worker
+    depends_on:
+      - manager
+    networks:
+      - crackhash
+
+  worker2:
+    build: ./worker
+    depends_on:
+      - manager
+    networks:
+      - crackhash
+
+  worker3:
+    build: ./worker
+    depends_on:
+      - manager
+    networks:
+      - crackhash
+
+networks:
+  crackhash:
+    driver: bridge
