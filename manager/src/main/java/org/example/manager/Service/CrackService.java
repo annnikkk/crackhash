@@ -64,7 +64,10 @@ public class CrackService {
     private void splitTasks(String requestId, String hash, int maxLength) {
 
         int taskCount = 100;
-        long total = (long) Math.pow(ALPHABET.length(), maxLength);
+        long total = 0;
+        for (int i = 1; i <= maxLength; i++){
+            total += (long) Math.pow(ALPHABET.length(), i);
+        }
         long chunkSize = total / taskCount;
 
         log.info("Splitting tasks: total={}, chunkSize={}, tasks={}", total, chunkSize, taskCount);

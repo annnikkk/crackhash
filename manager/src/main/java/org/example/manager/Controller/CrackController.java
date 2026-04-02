@@ -20,7 +20,7 @@ public class CrackController {
 
         String requestId = crackService.createRequest(
                 request.getHash(),
-                request.getMaxLen()
+                request.getMaxLength()
         );
 
         return new CrackResponse(requestId);

@@ -28,7 +28,6 @@ public class CrackService {
         log.info("Manager API URL for callbacks: {}", managerApiUrl);
     }
 
-    // Публичный метод, который вызывает контроллер
     public void startCracking() {
         log.info("Worker started");
         while (true) {
@@ -60,22 +59,34 @@ public class CrackService {
 
     private void crackTask(WorkerRequest req) {
 
-        long total = (long) Math.pow(ALPHABET.length(), req.getMaxLength());
+        long globalIndex = 0;
 
-        for (long i = req.getFrom(); i <= req.getTo() && i < total; i++) {
+        for (int len = 1; len <= req.getMaxLength(); len++){
 
-            String word = indexToWord(i, req.getMaxLength());
-            String hash = md5(word);
+            long localCount = (long) Math.pow(ALPHABET.length(), len);
 
-            if (hash.equalsIgnoreCase(req.getHash())) {
-                log.info("Найдено слово: {}", word);
-                sendResultToManager(req.getRequestId(), word);
-                return;
+            for (int i = 0; i < localCount; i++){
+                if ( globalIndex < req.getFrom()){
+                    globalIndex++;
+                    continue;
+                }
+                if (globalIndex > req.getTo()) return;
+
+                String word = indexToWord(i, len);
+                String hash = md5(word);
+
+                if (hash.equalsIgnoreCase(req.getHash())) {
+                    log.info("Найдено слово: {}", word);
+                    sendResultToManager(req.getRequestId(), word);
+                    return;
+                }
+
+                globalIndex++;
             }
         }
     }
 
-    private String indexToWord(long index, int maxLength) {
+    private String indexToWord(long index, int length) {
         StringBuilder sb = new StringBuilder();
         int base = ALPHABET.length();
 
@@ -85,7 +96,7 @@ public class CrackService {
             index /= base;
         }
 
-        while (sb.length() < maxLength) {
+        while (sb.length() < length) {
             sb.append(ALPHABET.charAt(0));
         }
 
