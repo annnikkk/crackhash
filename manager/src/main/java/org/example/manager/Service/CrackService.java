@@ -33,31 +33,6 @@ public class CrackService {
 
         splitTasks(requestId, hash, maxLength);
 
-
-        new Thread(() -> {
-            restTemplate.postForEntity(
-                "http://worker1:8080" + "/internal/start",
-                null,
-                Void.class
-            );
-        }).start();
-
-        new Thread(() -> {
-            restTemplate.postForEntity(
-                "http://worker2:8080" + "/internal/start",
-                null,
-                Void.class
-            );
-        }).start();
-
-        new Thread(() -> {
-            restTemplate.postForEntity(
-                "http://worker3:8080" + "/internal/start",
-                null,
-                Void.class
-            );
-        }).start();
-
         return requestId;
     }
 

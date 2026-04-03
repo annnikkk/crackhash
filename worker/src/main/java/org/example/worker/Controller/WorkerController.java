@@ -1,5 +1,6 @@
 package org.example.worker.Controller;
 
+import jakarta.annotation.PostConstruct;
 import org.example.worker.Model.WorkerRequest;
 import org.example.worker.Service.CrackService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +18,10 @@ public class WorkerController {
         this.service = service;
     }
 
-    @PostMapping("/start")
-    public void start() {
-        service.startCracking();
+    @PostConstruct
+    public void init(){
+        Thread t =  new Thread(() -> service.startCracking());
+        t.setDaemon(true);
+        t.start();
     }
 }

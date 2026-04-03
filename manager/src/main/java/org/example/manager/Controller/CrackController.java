@@ -45,6 +45,7 @@ public class CrackController {
     public WorkerRequest getTask() {
         WorkerRequest task = crackService.getTask();
 
+        //в сервисе создам мапу, тут в нее айди воркера, таску
         if (task != null) {
             log.info("Task выдаётся: from={} to={}", task.getFrom(), task.getTo());
         } else {

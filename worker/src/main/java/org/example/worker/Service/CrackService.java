@@ -35,8 +35,13 @@ public class CrackService {
             WorkerRequest task = getTaskFromManager();
 
             if (task == null) {
-                log.info("Нет задач, воркер завершает работу");
-                break;
+                log.info("Нет задач, воркер ждет");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                continue;
             }
 
             log.info("Получена задача: from={} to={}", task.getFrom(), task.getTo());
