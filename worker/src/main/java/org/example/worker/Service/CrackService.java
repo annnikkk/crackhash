@@ -7,6 +7,9 @@ import org.springframework.web.client.RestTemplate;
 import lombok.extern.slf4j.Slf4j;
 
 import jakarta.annotation.PostConstruct;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 
 @Slf4j
@@ -28,7 +31,7 @@ public class CrackService {
         log.info("Manager API URL for callbacks: {}", managerApiUrl);
     }
 
-    public void startCracking() {
+    public void startCracking() throws UnknownHostException {
         log.info("Worker started");
         while (true) {
 
@@ -51,8 +54,10 @@ public class CrackService {
         }
     }
 
-    private WorkerRequest getTaskFromManager() {
-        String url = managerApiUrl + "/api/hash/internal/task";
+    private WorkerRequest getTaskFromManager() throws UnknownHostException {
+        String hostname = InetAddress.getLocalHost().getHostName();
+        String url = managerApiUrl + "/api/hash/internal/task?workerNumber=" + hostname;
+        log.info("Воркер " + hostname + " пытался получить задачу");
 
         try {
             return restTemplate.getForObject(url, WorkerRequest.class);

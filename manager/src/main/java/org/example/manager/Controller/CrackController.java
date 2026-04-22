@@ -42,14 +42,14 @@ public class CrackController {
     }
 
     @GetMapping("/internal/task")
-    public WorkerRequest getTask() {
+    public WorkerRequest getTask(@RequestParam("workerNumber") String workerNumber) {
         WorkerRequest task = crackService.getTask();
 
-        //в сервисе создам мапу, тут в нее айди воркера, таску
         if (task != null) {
+            crackService.assignTask(workerNumber, task);
             log.info("Task выдаётся: from={} to={}", task.getFrom(), task.getTo());
         } else {
-            log.info("Задач больше нет");
+            log.info("Задач для воркеров нет");
         }
 
         return task;

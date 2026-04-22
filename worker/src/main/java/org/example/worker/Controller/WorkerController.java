@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.UnknownHostException;
+
 @RestController
 @RequestMapping("/internal")
 public class WorkerController {
@@ -20,7 +22,13 @@ public class WorkerController {
 
     @PostConstruct
     public void init(){
-        Thread t =  new Thread(() -> service.startCracking());
+        Thread t =  new Thread(() -> {
+            try {
+                service.startCracking();
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
+        });
         t.setDaemon(true);
         t.start();
     }
